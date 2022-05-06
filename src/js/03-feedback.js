@@ -4,7 +4,7 @@ const formEl = document.querySelector('.feedback-form');
 
 const FEEDBACK_FORM = "feedback-form-state";
 const savedData = JSON.parse(localStorage.getItem(FEEDBACK_FORM));
-const formData = savedData ?? {};
+const formData = (savedData !== null && savedData !== undefined) ? savedData : {};
 
 formEl.addEventListener('input', throttle(onFormInput, 500));
 formEl.addEventListener('submit', onFormSubmit);
@@ -27,12 +27,15 @@ onPageData();
 function onFormSubmit(evt) {
     evt.preventDefault();
     
-    if (formEl.elements.email.value === "" || 
-       formEl.elements.message.value === "") {
-
-      return alert("Please fill in all the fields!");
-        
-    };
+    //if (formEl.elements.email.value === "" || 
+    //   formEl.elements.message.value === "") {
+    //  return alert("Please fill in all the fields!");   
+    //};
+    const formInputNames = Object.keys(evt.currentTarget.elements)
+      .filter(item => isNaN(item)); 
+      if (!formInputNames.every(item => evt.currentTarget.elements[item].value)){ alert('Заполните все поля формы!!!');
+       return;
+      };
 
     evt.currentTarget.reset();
     localStorage.removeItem(FEEDBACK_FORM);
